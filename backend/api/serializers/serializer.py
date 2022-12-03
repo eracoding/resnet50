@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.models import ImagePath, ResNet
+from core.models import ImagePath, ResNet, Category
 
 
 class ImageSerializer(serializers.ModelSerializer):
@@ -11,4 +11,10 @@ class ImageSerializer(serializers.ModelSerializer):
 class ResnetSerializer(serializers.ModelSerializer):
     class Meta:
         model = ResNet
+        fields = "__all__"
+
+
+class CategorySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Category
         fields = "__all__"

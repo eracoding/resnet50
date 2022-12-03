@@ -1,1 +1,1 @@
-from .serializer import ImageSerializer, ResnetSerializer
+from .serializer import ImageSerializer, ResnetSerializer,CategorySerializer
