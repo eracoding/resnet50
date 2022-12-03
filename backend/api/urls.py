@@ -10,5 +10,7 @@ urlpatterns = [
     path('resnet/', view.ResnetListView.as_view()),
     path('category/', view.CategoryListView.as_view()),
     path("category/create", view.CategoryCreateView.as_view()),
+    path('category-sub/<int:pk>', view.CategoryListView.as_view()),
+    path('category-sub/<int:pk>/create', view.CategoryCreateView.as_view()),
     path("predict", view.PredictView.as_view())
 ]

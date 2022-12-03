@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from core.models import ImagePath, ResNet, Category
+from core.models import ImagePath, ResNet, Category, CategorySpecific
 from api.tasks import model
 
 
@@ -18,6 +18,17 @@ class ResnetSerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Category
+        fields = "__all__"
+
+    def create(self, validated_data):
+        instance = super().create(validated_data)
+        model.delay(instance.category)
+        return instance
+
+
+class CategorySpecificSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CategorySpecific
         fields = "__all__"
 
     def create(self, validated_data):
