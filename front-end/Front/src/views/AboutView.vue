@@ -15,7 +15,7 @@ export default {
     const service = usePredictService();
     // keep up with the files state (think data)
     const files = ref([])
-
+    const FOUND = ref("");
     // display the uploaded file names (think computed)
     const uploadInfo = computed(() => {
       return files.value.length === 1
@@ -43,6 +43,8 @@ export default {
       const form = new FormData();
       form.append("image", files.value[0]);
       const result = await service.predict(form);
+      FOUND.value = result.data.category
+      files.value = [];
     }
 
     onMounted(() => {
@@ -50,12 +52,20 @@ export default {
         document.body.addEventListener(eventName, preventDefaults)
       })
     })
-    return {files, uploadInfo, handleUpload, onDrop: onDrop, predictResult: predictResult}
+    return {
+      files, uploadInfo,
+      handleUpload,
+      FOUND,
+      onDrop,
+      predictResult
+    }
   },
 }
 </script>
 <template>
   <div @drop.prevent="onDrop" class="max-w-xl">
+    <h1 class="green" style="font-size: 30px"> {{ FOUND }}</h1>
+
     <label
         class="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
         <span class="flex items-center space-x-2">

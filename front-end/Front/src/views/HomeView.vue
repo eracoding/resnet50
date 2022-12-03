@@ -15,16 +15,25 @@ function addOption() {
 </script>
 
 <template>
-  <main>
+  <main class=" ">
     <div>
-      <div :key="index" v-for="(value, index) in options">
-        <span class="font-lg"> {{ value }}</span>
+      <div class="h-[70vh] overflow-scroll pr-4">
+        <router-link to="" class="flex  p-2 flex-row justify-between border-radius-lg " :key="index"
+                     v-for="(value, index) in options">
+          <span class="font-lg "> {{ value }}</span>
+          <span>
+          <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path
+              stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+        </span>
+        </router-link>
       </div>
+
       <input
           type="text"
           id="first_name"
           v-model="current"
-          class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+          class=" mt-2 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           placeholder="Category"
           required
       />
@@ -39,8 +48,6 @@ function addOption() {
         </span>
         <span class="relative text-white">Button Text</span>
       </a>
-
-
     </div>
   </main>
 </template>
