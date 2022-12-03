@@ -21,5 +21,6 @@ class CategorySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
-        instance = super(CategorySerializer).create(validated_data)
+        instance = super().create(validated_data)
         model.delay(instance.category)
+        return instance
