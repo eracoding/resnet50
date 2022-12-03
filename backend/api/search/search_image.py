@@ -41,3 +41,4 @@ class SearchImage:
                     open(os.path.join(path, "image_" + str(index) + ".png"), 'wb').write(c.content)
                 except requests.exceptions.MissingSchema:
                     pass
+        return path

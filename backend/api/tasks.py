@@ -6,4 +6,4 @@ from api.search import SearchImage
 @shared_task
 def model(category):
     search = SearchImage(category)
-    search.getImage()
+    path_to_image = search.getImage()
