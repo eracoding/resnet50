@@ -74,8 +74,11 @@ class ResNetUltra:
             epochs=epochs
         )
         if not os.path.isdir('networkModels'):
-            os.makedirs('networkModel')
-        self.model.save(f'networkModel\\model{len(self.classNames())}.h5')
+            os.makedirs('networkModels')
+        try:
+            self.model.save(f'networkModels\\model{len(self.classNames())}.h5')
+        except Exception:
+            pass
 
     def netPredict(self, classname, path_netmodel='', gimage=''):
         if not self.model:
@@ -88,7 +91,7 @@ class ResNetUltra:
         image = np.expand_dims(image_resized, axis=0)
         return self.model.predict(image)
 
-#
+
 # if __name__ == '__main__':
 #     resnet = ResNetUltra('D:\\Github\\mlnet\\s\\s')
 #     resnet.preProcessing()
@@ -98,3 +101,29 @@ class ResNetUltra:
 #     print(val)
 #     print(resnet.classNames())
 #     print(resnet.netSummary())
+
+# OUTPUT:
+#
+# 166/166 [==============================] - 289s 2s/step - loss: 0.4203 - accuracy: 0.8694 - val_loss: 0.2592 - val_accuracy: 0.9127
+# 1/1 [==============================] - 1s 897ms/step
+# [[4.1363939e-09 9.0778469e-09 2.1127456e-11 2.0578107e-10 1.4327614e-09
+#   7.6505891e-08 3.6456026e-07 5.9547375e-07 9.9999666e-01 2.2360964e-06]]
+# ['bicycle', 'gazelle', 'horse', 'lawn mower', 'ski', 'snowboard', 'tipper', 'tractor', 'train', 'truck']
+# Model: "sequential"
+# _________________________________________________________________
+#  Layer (type)                Output Shape              Param #
+# =================================================================
+#  resnet50 (Functional)       (None, 2048)              23587712
+#
+#  flatten (Flatten)           (None, 2048)              0
+#
+#  dense (Dense)               (None, 512)               1049088
+#
+#  dense_1 (Dense)             (None, 10)                5130
+#
+# =================================================================
+# Total params: 24,641,930
+# Trainable params: 1,054,218
+# Non-trainable params: 23,587,712
+# _________________________________________________________________
+# None
