@@ -1,6 +1,9 @@
 from celery import shared_task
 
+from api.search import SearchImage
+
 
 @shared_task
-def model():
-    print("MAGIC HAPPENED")
+def model(category):
+    search = SearchImage(category)
+    search.getImage()
