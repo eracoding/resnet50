@@ -1,5 +1,6 @@
 from celery import shared_task
 
+from api.neuron_model import ResNetUltra
 from api.search import SearchImage
 import os
 
@@ -10,4 +11,7 @@ from backend.settings import BASE_DIR
 def model(category):
     search = SearchImage(category)
     search.getImage()
-    base = os.path.join(BASE_DIR.absolute(), "images")
+    resnet = ResNetUltra()
+    resnet.preProcessing()
+    resnet.netModel()
+    resnet.netBuild(3)

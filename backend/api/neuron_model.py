@@ -1,3 +1,4 @@
+import json
 import os
 import matplotlib.pyplot as plt
 import numpy as np
@@ -5,11 +6,14 @@ import PIL
 import tensorflow as tf
 import pathlib
 import cv2
+from core.models import ResNet
+from backend.settings import BASE_DIR
 
 
 class ResNetUltra:
-    def __init__(self, data_path):
-        self.data_dir = pathlib.Path(data_path)
+    def __init__(self):
+        self.data_dir = pathlib.Path(os.path.join(BASE_DIR.absolute(), "images"))
+        self.model_dir = os.path.join(BASE_DIR.absolute(), "models")
         self.train_ds = ''
         self.val_ds = ''
         self.model = ''
@@ -40,10 +44,11 @@ class ResNetUltra:
         return self.train_ds.class_names
 
     def resNet50(self):
-        resnet = tf.keras.applications.ResNet50(include_top=False,
-                                                input_shape=(180, 180, 3),
-                                                pooling='avg', classes=len(self.classNames()),
-                                                weights='imagenet')
+        resnet = tf.keras.applications.ResNet50(
+            include_top=False,
+            input_shape=(180, 180, 3),
+            pooling='avg', classes=len(self.classNames()),
+            weights='imagenet')
         # frozing the learning
 
         for layer in resnet.layers:
@@ -73,25 +78,39 @@ class ResNetUltra:
             validation_data=self.val_ds,
             epochs=epochs
         )
-        if not os.path.isdir('networkModels'):
-            os.makedirs('networkModels')
         try:
-            self.model.save(f'networkModels\\model{len(self.classNames())}.h5')
-        except Exception:
+            path = os.path.join(self.model_dir, f'model_{len(self.classNames())}.h5')
+            self.model.save(path)
+            resnet = ResNet()
+            resnet.path = path
+            resnet.categories = json.dumps(self.classNames())
+            resnet.save()
+        except:
             pass
 
-    def netPredict(self, classname, path_netmodel='', gimage=''):
+    def netPredict(self, model: ResNet, gimage=''):
         if not self.model:
-            self.model = tf.keras.models.load_model(path_netmodel)
-        if not gimage:
-            image = cv2.imread(str(list(self.data_dir.glob(f"{classname}\\*"))[0]))
-        else:
-            image = cv2.imread(str(gimage))
+            self.model = tf.keras.models.load_model(model.path)
+        # if not gimage:
+        #     image = cv2.imread(str(list(self.data_dir.glob(f"{classname}\\*"))[0]))
+        # else:
+        image = cv2.imread(str(gimage))
         image_resized = cv2.resize(image, (180, 180))
         image = np.expand_dims(image_resized, axis=0)
-        return self.model.predict(image)
-
-
+        results = self.model.predict(image)[0]
+        print(results)
+        classes = model.to_array_category
+        max_category = 0
+        for index in range(len(results)):
+            if results[max_category] < results[index]:
+                max_category = index
+        print(max_category)
+        print(classes)
+        print(float(results[max_category]) > 0.3)
+        print(float(results[max_category]))
+        if float(results[max_category]) > 0.7:
+            return classes[max_category]
+        raise Exception("NOT FOUND ")
 # if __name__ == '__main__':
 #     resnet = ResNetUltra('D:\\Github\\mlnet\\s\\s')
 #     resnet.preProcessing()

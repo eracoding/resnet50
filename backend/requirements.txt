@@ -27,3 +27,8 @@ sqlparse==0.4.3
 urllib3==1.25.11
 vine==5.0.0
 wcwidth==0.2.5
+
+matplotlib~=3.6.2
+numpy~=1.23.5
+Pillow~=9.3.0
+opencv-python~=4.6.0.66
