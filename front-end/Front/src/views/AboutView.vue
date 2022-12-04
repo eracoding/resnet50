@@ -16,6 +16,8 @@ export default {
     // keep up with the files state (think data)
     const files = ref([])
     const FOUND = ref("");
+    const image_ref = ref(null);
+    const checking = ref(false);
     // display the uploaded file names (think computed)
     const uploadInfo = computed(() => {
       return files.value.length === 1
@@ -26,10 +28,13 @@ export default {
     // handle the file upload event (think methods)
     const handleUpload = (e) => {
       files.value = Array.from(e.target.files) || [];
+      image_ref.value.src = URL.createObjectURL(files.value[0])
+      FOUND.value = ""
     }
 
     function onDrop(e) {
       files.value = Array.from(e.dataTransfer.files) || []
+      FOUND.value = ""
       emit('input', [...e.dataTransfer.files])
     }
 
@@ -40,11 +45,14 @@ export default {
     const events = ['dragenter', 'dragover', 'dragleave', 'drop']
 
     async function predictResult() {
+      checking.value = true;
       const form = new FormData();
+      console.log(files.value);
       form.append("image", files.value[0]);
       const result = await service.predict(form);
       FOUND.value = result.data.category
-      files.value = [];
+      checking.value = false
+      // files.value = [];
     }
 
     onMounted(() => {
@@ -52,10 +60,13 @@ export default {
         document.body.addEventListener(eventName, preventDefaults)
       })
     })
+
     return {
       files, uploadInfo,
       handleUpload,
+      image_ref,
       FOUND,
+      checking,
       onDrop,
       predictResult
     }
@@ -65,9 +76,9 @@ export default {
 <template>
   <div @drop.prevent="onDrop" class="max-w-xl">
     <h1 class="green" style="font-size: 30px"> {{ FOUND }}</h1>
-
+    <h1 v-show="checking" class="green" style="font-size: 30px"> Ожидаем предсказания </h1>
     <label
-        class="flex justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
+        class="flex relative justify-center w-full h-32 px-4 transition bg-white border-2 border-gray-300 border-dashed rounded-md appearance-none cursor-pointer hover:border-gray-400 focus:outline-none">
         <span class="flex items-center space-x-2">
             <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24"
                  stroke="currentColor" stroke-width="2">
@@ -84,12 +95,15 @@ export default {
                 <span class="text-blue-600 underline">browse</span>
             </span>
         </span>
+      <img v-show="files.length" class="res-image rounded-md  h-[7.75rem] absolute" ref="image_ref" src=""
+           alt="predict">
       <input @change="handleUpload"
              type="file" name="file_upload" class="hidden">
     </label>
-    <a href="#_"
-       @click="predictResult"
-       class="relative mt-4 inline-flex items-center justify-center inline-block p-4 px-5 py-3 overflow-hidden font-medium text-indigo-600 rounded-lg shadow-2xl group">
+
+    <button
+        @click="predictResult"
+        class="relative mt-4 inline-flex items-center justify-center inline-block p-4 px-5 py-3 overflow-hidden font-medium text-indigo-600 rounded-lg shadow-2xl group">
         <span
             class="absolute top-0 left-0 w-40 h-40 -mt-10 -ml-3 transition-all duration-700 bg-red-500 rounded-full blur-md ease"></span><span
         class="absolute inset-0 w-full h-full transition duration-700 group-hover:rotate-180 ease">
@@ -97,7 +111,7 @@ export default {
         <span class="absolute bottom-0 right-0 w-24 h-24 -mr-10 bg-pink-500 rounded-full blur-md"></span>
         </span>
       <span class="relative text-white">Проверить</span>
-    </a>
+    </button>
   </div>
 </template>
 
@@ -105,5 +119,9 @@ export default {
 /* Finally we use Tailwind CSS to create our overlayed class */
 .overlayed {
   @apply absolute top-0 left-0 right-0 bottom-0 w-full block;
+}
+
+.res-image {
+  @apply object-fill w-full
 }
 </style>
