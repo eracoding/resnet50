@@ -2,7 +2,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 
 from api.neuron_model import ResNetUltra
-from core.models import ResNet, Category
+from core.models import ResNet, Category, CategorySpecific
 
 
 class PredictView(APIView):
@@ -15,7 +15,9 @@ class PredictView(APIView):
         try:
             category_name = resnet.netPredict(model=ResNet.objects.last(), gimage=f"/tmp/{my_file.name}")
             category = Category.objects.filter(category__contains=category_name).first()
-
+            if category is None:
+                specific = CategorySpecific.objects.filter(category__contains=category_name).first()
+                category = specific.parent
             return Response(
                 {'category': category.category})
         except:

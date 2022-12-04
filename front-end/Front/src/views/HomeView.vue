@@ -2,6 +2,7 @@
 import {useOptionStore} from "@/stores/option";
 import {ref} from "vue";
 import {storeToRefs} from "pinia";
+import type {Category} from "@/classes/category";
 
 const current = ref("");
 let store = useOptionStore();
@@ -9,7 +10,11 @@ const {options} = storeToRefs(store);
 store.getOptions();
 
 function addOption() {
-  store.storeOptions(current.value);
+  let model = {
+    id: 0,
+    category: current.value
+  } as Category;
+  store.storeOptions(model);
   current.value = "";
 }
 </script>
@@ -18,9 +23,10 @@ function addOption() {
   <main class=" ">
     <div>
       <div class="h-[70vh] overflow-scroll pr-4">
-        <router-link to="" class="flex  p-2 flex-row justify-between border-radius-lg " :key="index"
+        <router-link :to="{name:'detail', params: {category:value.category ,  parent_id: value.id }}"
+                     class="flex  p-2 flex-row justify-between border-radius-lg " :key="index"
                      v-for="(value, index) in options">
-          <span class="font-lg "> {{ value }}</span>
+          <span class="font-lg "> {{ value.category }}</span>
           <span>
           <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path
               stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -37,7 +43,7 @@ function addOption() {
           placeholder="Category"
           required
       />
-      <a href="#_"
+      <a href=""
          @click="addOption"
          class="relative mt-4 inline-flex items-center justify-center inline-block p-4 px-5 py-3 overflow-hidden font-medium text-indigo-600 rounded-lg shadow-2xl group">
         <span
@@ -46,7 +52,7 @@ function addOption() {
         <span class="absolute bottom-0 left-0 w-24 h-24 -ml-10 bg-purple-500 rounded-full blur-md"></span>
         <span class="absolute bottom-0 right-0 w-24 h-24 -mr-10 bg-pink-500 rounded-full blur-md"></span>
         </span>
-        <span class="relative text-white">Button Text</span>
+        <span class="relative text-white">Добавить</span>
       </a>
     </div>
   </main>

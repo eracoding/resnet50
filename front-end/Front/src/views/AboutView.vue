@@ -96,7 +96,7 @@ export default {
         <span class="absolute bottom-0 left-0 w-24 h-24 -ml-10 bg-purple-500 rounded-full blur-md"></span>
         <span class="absolute bottom-0 right-0 w-24 h-24 -mr-10 bg-pink-500 rounded-full blur-md"></span>
         </span>
-      <span class="relative text-white">Button Text</span>
+      <span class="relative text-white">Проверить</span>
     </a>
   </div>
 </template>

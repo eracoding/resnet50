@@ -1,9 +1,10 @@
 import {defineStore} from "pinia";
 import {ref} from "vue";
 import {useOptionService} from "@/services/option/optionService";
+import type {Category} from "@/classes/category";
 
 export const useOptionStore = defineStore("option", () => {
-    const array: string[] = [];
+    const array: Category[] = [];
     const options = ref(array);
     const service = useOptionService();
 
@@ -12,13 +13,11 @@ export const useOptionStore = defineStore("option", () => {
 
         const result = await service.getOption();
         // @ts-ignore
-        options.value = result.data.map((e:object) => e.category);
-        console.log(result.data);
-
+        options.value = result.data;
     }
 
-    async function storeOptions(op: string) {
-        await service.storeOption(op);
+    async function storeOptions(op: Category) {
+        await service.storeOption(op.category);
         options.value.push(op);
     }
 
