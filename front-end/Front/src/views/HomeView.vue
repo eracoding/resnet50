@@ -22,7 +22,7 @@ function addOption() {
 <template>
   <main class=" ">
     <div>
-      <div class="h-[70vh] overflow-scroll pr-4">
+      <div class="h-[50vh] overflow-scroll pr-4">
         <router-link :to="{name:'detail', params: {category:value.category ,  parent_id: value.id }}"
                      class="flex  p-2 flex-row justify-between border-radius-lg " :key="index"
                      v-for="(value, index) in options">

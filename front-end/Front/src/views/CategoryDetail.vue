@@ -27,7 +27,7 @@ function addOption() {
   <main class="">
     <h1 class="green" style="font-size: 30px"> {{ $route.params.category }}</h1>
     <div>
-      <div class="h-[70vh] overflow-scroll pr-4">
+      <div class="h-[50vh] overflow-scroll pr-4">
         <div class="flex  p-2 flex-row justify-between border-radius-lg " :key="index"
              v-for="(value, index) in options">
           <span class="font-lg "> {{ value.category }}</span>
