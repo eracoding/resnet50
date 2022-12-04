@@ -1,5 +1,7 @@
 import json
 import os
+from datetime import datetime
+
 import matplotlib.pyplot as plt
 import numpy as np
 import PIL
@@ -79,7 +81,8 @@ class ResNetUltra:
             epochs=epochs
         )
         try:
-            path = os.path.join(self.model_dir, f'model_{len(self.classNames())}.h5')
+            dt = datetime.now()
+            path = os.path.join(self.model_dir, f'model_{datetime.timestamp(dt)}.h5')
             self.model.save(path)
             resnet = ResNet()
             resnet.path = path
@@ -108,9 +111,9 @@ class ResNetUltra:
         print(classes)
         print(float(results[max_category]) > 0.3)
         print(float(results[max_category]))
-        if float(results[max_category]) > 0.7:
-            return classes[max_category]
-        raise Exception("NOT FOUND ")
+        # if float(results[max_category]) > 0.7:
+        return classes[max_category]
+        # raise Exception("NOT FOUND ")
 # if __name__ == '__main__':
 #     resnet = ResNetUltra('D:\\Github\\mlnet\\s\\s')
 #     resnet.preProcessing()
